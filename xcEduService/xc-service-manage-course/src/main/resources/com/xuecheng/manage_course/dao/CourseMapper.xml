@@ -5,4 +5,21 @@
             resultType="com.xuecheng.framework.domain.course.CourseBase">
         select * from course_base where id = #{id}
     </select>
+
+    <resultMap id="courseInfo" type="com.xuecheng.framework.domain.course.ext.CourseInfo">
+        <id property="id" column="id"/>
+        <result property="name"  column="NAME"/>
+        <result property="pic" column="pic"/>
+    </resultMap>
+    <select id="findCourseList" resultMap="courseInfo">
+        SELECT
+            b.id ,
+            b.NAME ,
+            p.pic
+        FROM
+            course_base b,
+            course_pic p
+        WHERE
+            b.id = p.courseid
+    </select>
 </mapper>
