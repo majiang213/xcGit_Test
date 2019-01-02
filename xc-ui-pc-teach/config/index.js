@@ -85,7 +85,7 @@ module.exports = {
 
        },
        '/api/sys': {//系统管理
-       target: 'http://127.0.0.1:31001',
+       target: 'http://127.0.0.1:31200',
          pathRewrite: {
            '^/api': ''
          }

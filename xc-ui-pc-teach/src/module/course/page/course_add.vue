@@ -33,7 +33,7 @@
 
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary"  @click.native="save" >提交</el-button>
+      <el-button type="primary"  @click="save" >提交</el-button>
     </div>
   </div>
 </template>
@@ -89,6 +89,7 @@
           // 选择课程分类存储到categoryActive
            this.courseForm.mt=  this.categoryActive[0]//大分类
            this.courseForm.st=  this.categoryActive[1]//小分类
+          debugger;
           courseApi.addCourseBase(this.courseForm).then(res=>{
               if(res.success){
                   this.$message.success("提交成功")
@@ -110,19 +111,19 @@
           this.categoryList = res.children;
           console.log(this.categoryList)
 
-      })
+      });
 
       //查询数据字典
       //查询课程等级
       systemApi.sys_getDictionary("200").then(res=>{
-
+        console.log(res);
         this.gradeList = res.dvalue;
-      })
+      });
       //查询学习模式
       systemApi.sys_getDictionary("201").then(res=>{
-
+        console.log(res);
         this.studymodelList = res.dvalue;
-      })
+      });
 
     }
   }

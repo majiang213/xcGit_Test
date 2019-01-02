@@ -7,18 +7,35 @@ let apiUrl = sysConfig.xcApiUrlPre;
 //我的课程列表
 export const findCourseList = (page,size,params) => {
 //使用工具类将json对象转成key/value
-  let queries = querystring.stringify(params)
+  let queries = querystring.stringify(params);
   return http.requestQuickGet(apiUrl+"/course/coursebase/list/"+page+"/"+size+"?"+queries)
-}
+};
 
 //查询课程分类
 export const category_findlist= () => {
   return http.requestQuickGet(apiUrl+'/category/list')
-}
+};
+// 通过id查询单个课程基本信息
+export const getCoursebaseById = courseid => {
+  return http.requestQuickGet(apiUrl+'/course/coursebase/'+courseid)
+};
+// 更新课程基本信息
+export const updateCoursebase = (id,course) => {
+  return http.requestPut(apiUrl +'/course/update/'+id,course);
+};
+// 查询课程营销信息对象
+export const getCourseMarketById = id => {
+  return http.requestQuickGet(apiUrl+ "/course/courseMarket/"+id);
+};
+
+export const updateCourseMarket = (id,course) => {
+  return http.requestPut(apiUrl +'/course/updateCourseMarket/'+id,course);
+};
+
 /*添加课程基础信息*/
 export const addCourseBase = params => {
   return http.requestPost(apiUrl+'/course/coursebase/add',params)
-}
+};
 /*查询课程计划*/
 export const findTeachplanList = courseid => {
   return http.requestQuickGet(apiUrl+'/course/teachplan/list/'+courseid)
@@ -26,7 +43,7 @@ export const findTeachplanList = courseid => {
 /*添加课程计划*/
 export const addTeachplan = teachplah => {
   return http.requestPost(apiUrl+'/course/teachplan/add',teachplah)
-}
+};
 
 //保存课程图片地址到课程数据 库
 export const addCoursePic= (courseId,pic) => {

@@ -46,7 +46,7 @@
     data() {
       return {
         page:1,
-        size:7,
+        size:5,
         total: 0,
         courses: [
           {
@@ -82,13 +82,13 @@
         });
       },
       handleManage: function (id) {
-        console.log(id)
+        console.log(id);
         this.$router.push({ path: '/course/manager/'+id})
       }
 
     },
     created(){
-
+     this.handleCurrentChange(1);
     },
     mounted() {
       //查询我的课程
