@@ -6,12 +6,12 @@
         select * from course_base where id = #{id}
     </select>
 
-    <resultMap id="courseInfo" type="com.xuecheng.framework.domain.course.ext.CourseInfo">
+    <resultMap id="courseInfoMap" type="com.xuecheng.framework.domain.course.ext.CourseInfo">
         <id property="id" column="id"/>
         <result property="name"  column="NAME"/>
         <result property="pic" column="pic"/>
     </resultMap>
-    <select id="findCourseList" resultMap="courseInfo">
+    <select id="findCourseList" resultMap="courseInfoMap">
         SELECT
             b.id ,
             b.NAME ,

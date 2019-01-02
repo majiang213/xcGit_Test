@@ -3,18 +3,17 @@ package com.xuecheng.manage_course.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.course.CourseBase;
+import com.xuecheng.framework.domain.course.CourseMarket;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
+import com.xuecheng.framework.domain.course.response.CourseCode;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.framework.model.response.ResponseResult;
-import com.xuecheng.manage_course.dao.CourseBaseRepository;
-import com.xuecheng.manage_course.dao.CourseMapper;
-import com.xuecheng.manage_course.dao.TeachplanMapper;
-import com.xuecheng.manage_course.dao.TeachplanRepository;
+import com.xuecheng.manage_course.dao.*;
 import com.xuecheng.manage_course.service.CourseService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +37,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Autowired
     private CourseMapper courseMapper;
+
+    @Autowired
+    private CourseMarketRepository courseMarketRepository;
 
     /**
      * 查询当前课程的课程计划
@@ -137,5 +139,101 @@ public class CourseServiceImpl implements CourseService {
         queryResult.setTotal(courseList.getTotal());
         // 返回查询响应结果对象
         return new QueryResponseResult(CommonCode.SUCCESS, queryResult);
+    }
+
+    /**
+     * 课程基本信息新增
+     * @param courseBase 课程基本信息对象
+     * @return 响应码
+     */
+    @Override
+    public ResponseResult addCourse(CourseBase courseBase) {
+
+        if (StringUtils.isEmpty(courseBase.getName())){
+            ExceptionCast.cast(CourseCode.COURSE_NAMEISNULL);
+        }
+        if (StringUtils.isEmpty(courseBase.getGrade())){
+            ExceptionCast.cast(CourseCode.COURSE_GRADISNULL);
+        }
+        if (StringUtils.isEmpty(courseBase.getStudymodel())){
+            ExceptionCast.cast(CourseCode.COURSE_STUDYMODEL);
+        }
+
+        courseBaseRepository.save(courseBase);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    /**
+     * 通过课程id查询课程基本信息对象并返回
+     * @param courseId
+     * @return
+     */
+    @Override
+    public CourseBase getCourseBaseById(String courseId) {
+
+        Optional<CourseBase> courseBaseOptional = courseBaseRepository.findById(courseId);
+        if (!courseBaseOptional.isPresent()){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        return courseBaseOptional.get();
+    }
+
+    /**
+     * 更新课程基本信息对象
+     * @param id 课程id
+     * @param courseBase 需要更新进数据库的课程基本信息
+     * @return 操作码
+     */
+    @Override
+    public ResponseResult updateCourseBase(String id, CourseBase courseBase) {
+       if (StringUtils.isEmpty(id)){
+           ExceptionCast.cast(CommonCode.INVALID_PARAM);
+       }
+       if (courseBase == null){
+           ExceptionCast.cast(CommonCode.INVALID_PARAM);
+       }
+
+       courseBaseRepository.save(courseBase);
+
+       return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    /**
+     * 通过课程id查询课程的营销信息并返回
+     * @param courseId 课程id
+     * @return
+     */
+    @Override
+    public CourseMarket getCourseMarketById(String courseId) {
+        Optional<CourseMarket> courseMarketOptional = courseMarketRepository.findById(courseId);
+
+        if (courseMarketOptional.isPresent()){
+            return courseMarketOptional.get();
+        }
+        return null;
+    }
+
+    /**
+     * 更新课程的营销信息,如果课程没有营销信息则添加
+     * @param id 课程id
+     * @param courseMarket 课程营销信息对象
+     * @return
+     */
+    @Override
+    public ResponseResult updateCourseMarket(String id, CourseMarket courseMarket) {
+        if (StringUtils.isEmpty(id)){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        if (courseMarket == null){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+
+        if (!id.equals(courseMarket.getId())){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        // 进行更新
+        courseMarketRepository.save(courseMarket);
+
+        return new ResponseResult(CommonCode.SUCCESS);
     }
 }
